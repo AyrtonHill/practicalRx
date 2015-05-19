@@ -79,7 +79,7 @@ public class PoolController {
 
     @RequestMapping("/lastblock")
     public Map<String, Object> lastBlock() {
-        LocalDateTime found = statService.lastBlockFoundDate();
+        LocalDateTime found = statService.lastBlockFoundDate().toBlocking().single();
         Duration foundAgo = Duration.between(found, LocalDateTime.now());
         User foundBy = statService.lastBlockFoundBy().toBlocking().single();
 

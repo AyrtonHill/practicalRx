@@ -2,7 +2,6 @@ package org.dogepool.practicalrx.services;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 
 import org.dogepool.practicalrx.domain.User;
@@ -10,6 +9,7 @@ import org.dogepool.practicalrx.domain.UserStat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Service to get stats on the pool, like top 10 ladders for various criteria.
@@ -36,9 +36,10 @@ public class StatService {
                           });
     }
 
-    public LocalDateTime lastBlockFoundDate() {
+    public Observable<LocalDateTime> lastBlockFoundDate() {
         Random rng = new Random(System.currentTimeMillis());
-        return LocalDateTime.now().minus(rng.nextInt(72), ChronoUnit.HOURS);
+        LocalDateTime date = LocalDateTime.now().minus(rng.nextInt(72), ChronoUnit.HOURS);
+        return Observable.just(date);
     }
 
     public Observable<User> lastBlockFoundBy() {
