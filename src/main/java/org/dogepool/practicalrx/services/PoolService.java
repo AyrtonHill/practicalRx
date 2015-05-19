@@ -28,22 +28,22 @@ public class PoolService {
     }
 
     public Observable<Boolean> connectUser(User user) {
+        System.out.println(user.nickname + " connected");
         return Observable
                 .<Boolean>create(s -> {
                     connectedUsers.add(user);
                     s.onNext(Boolean.TRUE);
                     s.onCompleted();
-                })
-                .doOnNext(v -> System.out.println(user.nickname + " connected"));
+                });
     }
 
     public Observable<Boolean> disconnectUser(User user) {
+        System.out.println(user.nickname + " disconnected");
         return Observable
                 .<Boolean>create(s -> {
                     connectedUsers.remove(user);
                     s.onNext(Boolean.TRUE);
                     s.onCompleted();
-                })
-                .doOnNext(v -> System.out.println(user.nickname + " disconnected"));
+                });
     }
 }
