@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.dogepool.practicalrx.domain.User;
-import org.dogepool.practicalrx.error.*;
+import org.dogepool.practicalrx.error.DogePoolException;
 import org.dogepool.practicalrx.error.Error;
 import org.dogepool.practicalrx.services.AdminService;
 import org.dogepool.practicalrx.services.PoolService;
@@ -37,7 +37,7 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/mining/{id}", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Object> registerMiningUser(@PathVariable("id") long id) {
-        User user = userService.getUser(id);
+        User user = userService.getUser(id).toBlocking().firstOrDefault(null);
         if (user != null) {
             boolean connected = poolService.connectUser(user).toBlocking().first();
             List<User> miningUsers = poolService.miningUsers().toList().toBlocking().first();
@@ -49,7 +49,7 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "mining/{id}", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Object> deregisterMiningUser(@PathVariable("id") long id) {
-        User user = userService.getUser(id);
+        User user = userService.getUser(id).toBlocking().firstOrDefault(null);
         if (user != null) {
             boolean disconnected = poolService.disconnectUser(user).toBlocking().first();
             List<User> miningUsers = poolService.miningUsers().toList().toBlocking().first();
