@@ -11,12 +11,10 @@ import org.dogepool.practicalrx.services.PoolRateService;
 import org.dogepool.practicalrx.services.PoolService;
 import org.dogepool.practicalrx.services.RankingService;
 import org.dogepool.practicalrx.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
@@ -47,13 +45,13 @@ public class Main {
         return args -> {
             User user = userService.getUser(0);
             //connect USER automatically
-            boolean connected = poolService.connectUser(user);
+            boolean connected = poolService.connectUser(user).toBlocking().first();
 
             //gather data
             List<UserStat> hashLadder = rankinService.getLadderByHashrate();
             List<UserStat> coinsLadder = rankinService.getLadderByCoins();
             String poolName = poolService.poolName();
-            int miningUserCount = poolService.miningUsers().size();
+            int miningUserCount = poolService.miningUsers().count().toBlocking().first();
             double poolRate = poolRateService.poolGigaHashrate();
 
             //display welcome screen in console
